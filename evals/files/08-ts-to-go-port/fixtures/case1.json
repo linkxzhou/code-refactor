@@ -1,0 +1,5 @@
+[{"user": "zoe", "amount": 10, "tags": ["vip", "eu"]},
+ {"user": "<b>al</b>", "amount": 9, "note": "ok"},
+ {"user": "zoe", "amount": 100, "tags": ["eu"], "note": "👍👍"},
+ {"user": "10", "amount": 1.5, "note": "née"},
+ {"user": "2", "amount": -3}]

@@ -1,0 +1,1 @@
+{"users":{"2":{"count":1,"total":-3,"avg":-3},"10":{"count":1,"total":1.5,"avg":1.5},"zoe":{"count":2,"total":110,"avg":55},"<b>al</b>":{"count":1,"total":9,"avg":9}},"amountsSorted":[-3,1.5,10,100,9],"longestNote":{"user":"zoe","chars":4},"tags":["vip","eu"],"half":[5,5,50,1,-1]}

@@ -1,0 +1,1 @@
+{"buckets": [0, 1, 1, 2], "offsets": [1, 0, 1, 1], "pct_positive": 100, "top": [["b", 2], ["a", 2], ["c", 1]], "widths": {}, "mean": 2.75}

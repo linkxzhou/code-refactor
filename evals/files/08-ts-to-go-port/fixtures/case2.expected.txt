@@ -1,0 +1,1 @@
+{"users":{"a":{"count":2,"total":8,"avg":4},"b":{"count":1,"total":25,"avg":25}},"amountsSorted":[25,3,5],"longestNote":null,"tags":[],"half":[3,13,2]}

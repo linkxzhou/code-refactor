@@ -1,0 +1,90 @@
+[
+  {
+    "query": "our python image-hash script is too slow, rewrite it in rust as a pyo3 extension so the existing `import imghash` calls keep working",
+    "should_trigger": true
+  },
+  {
+    "query": "port the TypeScript webhook relay (src/relay/*.ts, express + zod) to a Go service, same routes and JSON responses",
+    "should_trigger": true
+  },
+  {
+    "query": "our services/payments folder is a mess - payment.py imports refund.py which imports payment.py again. can you untangle the circular imports and split it into sensible modules without breaking the 30 call sites?",
+    "should_trigger": true
+  },
+  {
+    "query": "Port the log parser in tools/logfmt.py to Rust, it's too slow in CI. Output must stay byte-identical because other jobs grep it.",
+    "should_trigger": true
+  },
+  {
+    "query": "把 legacy/order_service.js 用 TypeScript + NestJS 重写一遍，接口和返回格式不能变",
+    "should_trigger": true
+  },
+  {
+    "query": "We're converting the Android app's data layer from Java to Kotlin, start with the repository classes under data/repo; some Java activities will keep calling them for a while",
+    "should_trigger": true
+  },
+  {
+    "query": "Rewrite our C ring buffer and CRC code in Rust but keep the C header so the firmware build doesn't change",
+    "should_trigger": true
+  },
+  {
+    "query": "plan a refactor to move all the db access out of the express route handlers into a repository layer - just the plan for now, ~25 route files",
+    "should_trigger": true
+  },
+  {
+    "query": "这个 Python 服务想整体迁移到 Go，先帮我做个迁移方案和依赖对照",
+    "should_trigger": true
+  },
+  {
+    "query": "change the signature of createInvoice(customerId, amount, currency, dueDate, notes) to take an options object everywhere it's used in the monorepo",
+    "should_trigger": true
+  },
+  {
+    "query": "Swap our hand-rolled HTTP client wrapper for axios across the frontend codebase without breaking retries and interceptors",
+    "should_trigger": true
+  },
+  {
+    "query": "this one function has 5 levels of nested ifs, can you flatten it with guard clauses? function is pasted below",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我简化一下这段代码，去掉重复的部分，变量名也改清楚一点",
+    "should_trigger": false
+  },
+  {
+    "query": "translate this README section into Japanese for our docs site",
+    "should_trigger": false
+  },
+  {
+    "query": "write an alembic migration that renames users.name to users.full_name without downtime",
+    "should_trigger": false
+  },
+  {
+    "query": "bump react from 17 to 18 in package.json and fix whatever breaks in the build",
+    "should_trigger": false
+  },
+  {
+    "query": "the CSV export rounds totals wrong (1.005 shows as 1.00) - fix the bug in priceFormat.js",
+    "should_trigger": false
+  },
+  {
+    "query": "profile the Go service and make the JSON encoding hot path faster",
+    "should_trigger": false
+  },
+  {
+    "query": "review this PR for security issues and code quality",
+    "should_trigger": false
+  },
+  {
+    "query": "move our Postgres database from AWS RDS to Cloud SQL",
+    "should_trigger": false
+  },
+  {
+    "query": "add type hints to this python file and fix mypy errors",
+    "should_trigger": false
+  },
+  {
+    "query": "explain the difference between Go interfaces and TypeScript interfaces with examples",
+    "should_trigger": false
+  }
+]
