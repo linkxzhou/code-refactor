@@ -1,9 +1,9 @@
 ---
 name: code-refactor
-description: Restructure, rewrite, or port existing code to another language while proving behavior is preserved. Modes - refactor (multi-file restructuring in one language - split a god module into a package, untangle circular imports, move modules, change a signature across its callers, migrate an internal API step by step), rewrite (re-implement a component from scratch or on a new framework, gated by characterization tests and a parity check), and port (translate code to another language, e.g. Python to Go or Rust, TS to Go or Rust, Java to Kotlin, C to Rust, with fixture parity). Use when the user asks to refactor, restructure, split or reorganize modules, rewrite, reimplement, migrate to a new framework, or port/convert code - including 重构模块, 拆分模块, 重写, 代码迁移, 移植到 Rust, 把 Python 改成 Go. Not for tidying one function or snippet (use simplify-code), adding type hints or fixing type-checker errors, bug fixes, new features, performance tuning, schema or cloud migrations, dependency bumps, or prose translation.
+description: Refactor, rewrite, port, migrate, or modernize existing source code - read this skill FIRST, before searching files or planning, even if the named files are not in the workspace. Covers refactor (split a god module into a package, untangle circular imports, move modules, change a signature across callers, swap an internal API or library across a codebase step by step), rewrite (re-implement a component from scratch or on a new framework, e.g. JS to TS + NestJS), and port / translate code to another language (Python to Go or Rust, pyo3 extensions, TS to Go, Java to Kotlin, C to Rust behind an unchanged C header) with fixture parity. Triggers - refactor, restructure, split modules, rewrite, reimplement, port, convert to another language, migrate to a framework, modernize, 重构, 拆分模块, 重写, 代码迁移, 移植到 Rust, 把 Python 改成 Go. Not for tidying one function (simplify-code), type hints, bug fixes, features, perf, database/schema/cloud/infra migrations (e.g. Postgres RDS to Cloud SQL), dependency bumps, or prose translation.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.0.2"
 ---
 
 # Code Refactor · Rewrite · Port
@@ -11,6 +11,25 @@ metadata:
 Change the *shape* or the *language* of code while keeping what it *does*. The promise: every caller, test, and observable output behaves as before unless the user approved a difference. To keep it, pin behavior down **before** editing, move in green steps, and report evidence rather than confidence.
 
 Local cleanup of one function or snippet belongs to `simplify-code`. If the request is that small, say so and hand it over.
+
+## Read first (hard rules)
+
+Read this SKILL.md top to bottom before anything else, even when the workspace is empty or the files the user names are missing. A missing file is not a reason to skip the skill: pick the mode, say what is missing, and deliver what the mode allows (a plan, a contract, or a port of the code the user pasted).
+
+1. **Stay in the workspace.** Read and write only inside the given working directory. Never search the disk for other projects, and never read, reuse, or write sibling/parent project folders or earlier runs' outputs, even if they look like a head start.
+2. **No installs.** Do not `brew install`, `apt`, `pip install` toolchains, add rustup components, or download compilers/SDKs without the user's approval. If a toolchain is missing, write "Not run: <tool> unavailable (<exact command>)", verify what you can with the tools present, and still deliver the code.
+3. **Finish, don't hand off.** Do not end with "state saved to RESUME.md" / "say the word and I'll continue" while work can still proceed. Stop early only for a Gate, a denial, or the budget below, and then deliver the full report for what exists.
+4. **Plan-only means no files.** If the user asks for a plan, review, or assessment, edit and create nothing; put the plan in the reply (write a file only if asked).
+5. **Denied means stop.** If a command or deletion is denied, do not get the same effect another way; list it in the report.
+
+## Budget (time and steps)
+
+Runs are time-limited; a correct port with no report counts as a failure.
+- **Smallest verifiable slice first:** get the contract, one end-to-end path, and the given fixtures/compare script green before anything else.
+- **Checkpoint: report before hardening.** The moment the given fixtures/compare script first pass, write the Output-format report to `PORTING.md` (or the plan) with the current N/M result *before* running any generated/differential inputs. Every later milestone only updates it.
+- **Stay in the input domain.** Differential mismatches on inputs the fixtures and contract do not cover (wrong types such as bools or mixed int/float, huge magnitudes, float summation order, exotic Unicode) go under Follow-ups as "outside contract"; do not fix them unless the user asked for full-domain parity.
+- **Cap exploration:** at most one modest differential/fuzz run (hundreds to a few thousand inputs) and at most 3 fix-and-rerun rounds per mismatch class. Do not re-derive language runtime internals, hand-build Unicode tables, or chase cases outside the given fixtures and contract; list them under Follow-ups.
+- **Milestones:** (1) mode + contract, (2) baseline/fixtures captured, (3) first green slice, (4) full fixtures green + report written, (5) optional extra hardening. If you have used roughly two thirds of your steps or time, stop hardening and deliver the final report.
 
 ## Pick the mode
 
@@ -44,8 +63,7 @@ Never claim a check you did not run. "Not run: no Go toolchain available" is use
 ### Keep the proof proportionate
 
 - **One solid check per contract item.** Use fixtures and targeted edge cases, then one modest differential/fuzz run (hundreds to a few thousand inputs). Stop once every contract line has green evidence. Million-input soaks, sanitizers, or Miri are only for real risk (unsafe/FFI code, concurrency), and then only once.
-- **Use the toolchain that is already there.** Check PATH, version managers, and keg-only Homebrew prefixes such as `/opt/homebrew/opt/openjdk@21`. Do not install packages, add rustup components, or download compilers/SDKs without asking. If a tool is missing, write "Not run: <tool> unavailable" with the exact command.
-- **Denied means stop.** If a command, deletion, or tool call is denied, don't get the same effect another way (e.g. `os.remove` after `rm` is blocked); leave it and list it in the report.
+- **Use the toolchain that is already there** (PATH, version managers, keg-only prefixes such as `/opt/homebrew/opt/openjdk@21`), inside this workspace only. No installs (hard rule 2).
 - **Keep scaffolding out of the deliverable.** Keep real tests where the project keeps tests. Put scratch material (drivers, oracle copies) in one named directory and say so. Never leave large downloads in the repo.
 - **Write the contract down early.** For multi-step ports or rewrites, keep the contract and its running evidence in the plan or a short `PORTING.md`, so the record survives an interrupted session.
 
@@ -179,7 +197,7 @@ Found, not fixed: <bugs discovered, with location and reproduction>   (omit if n
 Follow-ups: <redesign ideas, cleanup left for later, shims still alive and why>
 ```
 
-Then show the diff, the new files, or the plan document. If the user only asked for a plan or assessment, edit nothing and say so.
+Then show the diff, the new files, or the plan. If the user only asked for a plan or assessment, edit and create nothing (no plan file unless asked), put the plan in the reply, and say so.
 
 ## References
 
